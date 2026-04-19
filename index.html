@@ -67,7 +67,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 #screen-portal{flex-direction:column;background:var(--bg);}
 .portal-header{background:rgba(10,22,40,0.96);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
 .portal-brand{display:flex;align-items:center;gap:10px;}
-.portal-brand-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--teal),#0077b5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.portal-brand-icon{width:30px;height:30px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
 .portal-brand-name{font-size:16px;font-weight:900;letter-spacing:3px;color:#fff;}
 .portal-brand-tagline{font-size:9px;color:var(--teal);letter-spacing:1.5px;margin-left:2px;}
 .portal-spacer{flex:1;}
@@ -437,6 +437,7 @@ const ACCOUNTS = {
     updated: "April 2026",
     // buRoles drives the roles total — update these when dashboard hiring data changes
     buRoles: { "Bell Flight": 210, "Textron Aviation": 280, "Textron Systems": 35, "Textron India": 25 },
+    revenue: 13.7,   // $B — update when annual report changes
     signal: "FLRAA production ramp · Cessna Denali Part 23 cert · Citation Ascend NPI"
   },
   "boeing": {
@@ -447,7 +448,7 @@ const ACCOUNTS = {
     location: "Seattle WA · St. Louis MO · Arlington VA",
     priority: "high",
     updated: "March 2026",
-    roles: "200+",
+    roles: "200+", revenue: 66.5,
     signal: "737 MAX production ramp · 777X certification · T-7A LRIP supply chain"
   },
   "rtx": {
@@ -461,6 +462,7 @@ const ACCOUNTS = {
     updated: "April 2026",
     // buRoles drives the roles total — update these when dashboard hiring data changes
     buRoles: { "Collins Aerospace": 2100, "Pratt & Whitney": 1200, "Raytheon M&D": 600 },
+    revenue: 80.7,   // $B — update when annual report changes
     signal: "GTF engine MRO ramp · Collins avionics upgrades · NGAD supply chain"
   },
   "honeywell": {
@@ -471,7 +473,7 @@ const ACCOUNTS = {
     location: "Phoenix AZ · Albuquerque NM · Minneapolis MN",
     priority: "high",
     updated: "March 2026",
-    roles: "120+",
+    roles: "120+", revenue: 9.8,
     signal: "Advanced Air Mobility avionics · eAPU development · Anthem avionics platform"
   },
   "bombardier": {
@@ -482,7 +484,7 @@ const ACCOUNTS = {
     location: "Montreal QC · Wichita KS · Belfast UK",
     priority: "high",
     updated: "February 2026",
-    roles: "90+",
+    roles: "90+", revenue: 7.4,
     signal: "Global 8000 certification · Challenger 3500 production ramp · MRO expansion"
   },
   "embraer": {
@@ -493,7 +495,7 @@ const ACCOUNTS = {
     location: "Sao Paulo BR · Nashville TN · Fort Lauderdale FL",
     priority: "high",
     updated: "February 2026",
-    roles: "100+",
+    roles: "100+", revenue: 6.2,
     signal: "E2 production ramp · Phenom 300E avionics · C-390 export campaign"
   },
   "bae": {
@@ -504,7 +506,7 @@ const ACCOUNTS = {
     location: "Farnborough UK · Nashua NH · Fort Worth TX",
     priority: "medium",
     updated: "January 2026",
-    roles: "80+",
+    roles: "80+", revenue: 28.3,
     signal: "GCAP Tempest development · F-35 sustainment · M113 replacement program"
   },
   "thales": {
@@ -515,7 +517,7 @@ const ACCOUNTS = {
     location: "Paris FR · Reading UK · Ottawa CA",
     priority: "medium",
     updated: "January 2026",
-    roles: "70+",
+    roles: "70+", revenue: 20.1,
     signal: "FlytX avionics platform · UAS C2 systems · SafePort maritime"
   },
   "parker": {
@@ -526,7 +528,7 @@ const ACCOUNTS = {
     location: "Irvine CA · Ogden UT · Hazel Park MI",
     priority: "medium",
     updated: "January 2026",
-    roles: "60+",
+    roles: "60+", revenue: 19.8,
     signal: "787 hydraulics sustainment · F-35 fuel system · UAM actuation systems"
   },
   "dhc": {
@@ -537,7 +539,7 @@ const ACCOUNTS = {
     location: "Toronto ON · Calgary AB · Bridgeport WV",
     priority: "medium",
     updated: "December 2025",
-    roles: "45+",
+    roles: "45+", revenue: 0.5,
     signal: "Dash 8-400 production restart · Twin Otter Series 400 support · C-17 sustainment"
   },
   "triumph": {
@@ -548,7 +550,7 @@ const ACCOUNTS = {
     location: "Berwyn PA · West Palm Beach FL · Red Oak TX",
     priority: "medium",
     updated: "December 2025",
-    roles: "55+",
+    roles: "55+", revenue: 1.2,
     signal: "737 nacelle production · Gulfstream structures · Military MRO contracts"
   },
   "ametek": {
@@ -559,7 +561,7 @@ const ACCOUNTS = {
     location: "Berwyn PA · Monrovia CA · Wilmington DE",
     priority: "medium",
     updated: "November 2025",
-    roles: "40+",
+    roles: "40+", revenue: 6.1,
     signal: "Precision motion control for eVTOL · SIFCO MRO services · Defense sensor refresh"
   },
   "transdigm": {
@@ -570,7 +572,7 @@ const ACCOUNTS = {
     location: "Cleveland OH · Various US",
     priority: "medium",
     updated: "November 2025",
-    roles: "50+",
+    roles: "50+", revenue: 7.3,
     signal: "Aftermarket parts demand surge · Acquisition integration engineering · eVTOL actuators"
   },
   "jeppesen": {
@@ -581,7 +583,7 @@ const ACCOUNTS = {
     location: "Englewood CO · Frankfurt DE · Sydney AU",
     priority: "medium",
     updated: "October 2025",
-    roles: "35+",
+    roles: "35+", revenue: 1.1,
     signal: "Digital chart modernization · UAM airspace integration · AI flight planning"
   },
   "gea": {
@@ -592,7 +594,7 @@ const ACCOUNTS = {
     location: "Dusseldorf DE · Columbia MD · Hudson WI",
     priority: "low",
     updated: "October 2025",
-    roles: "25+",
+    roles: "25+", revenue: 5.8,
     signal: "Plant engineering digitalization · Separator engineering · IoT connectivity"
   }
 };
@@ -712,12 +714,17 @@ function showPortal() {
     : `You have ${userAccounts.length} account${userAccounts.length>1?'s':''} assigned. Click any card to open its intelligence dashboard.`;
 
   // Stats
-  const high = userAccounts.filter(k=>ACCOUNTS[k]&&ACCOUNTS[k].priority==='high').length;
   const totalRoles = userAccounts.reduce((s,k)=>s+(parseInt((ACCOUNTS[k]||{}).roles)||0),0);
   const totalRolesFormatted = totalRoles >= 1000 ? (totalRoles/1000).toFixed(1).replace(/\.0$/,'') + 'K+' : totalRoles + '+';
+  const totalRevenue = userAccounts.reduce((s,k)=>s+((ACCOUNTS[k]||{}).revenue||0),0);
+  const revenueFormatted = totalRevenue >= 100 ? Math.round(totalRevenue) + 'B' : totalRevenue.toFixed(1) + 'B';
+  const totalBUs = userAccounts.reduce((s,k)=>{
+    const a = ACCOUNTS[k]; if (!a) return s;
+    return s + (a.buRoles ? Object.keys(a.buRoles).length : 1);
+  },0);
   document.getElementById('portal-stats').innerHTML=`
-    <div class="stat-chip"><span class="stat-num">${userAccounts.length}</span><span class="stat-label">Accounts</span></div>
-    <div class="stat-chip"><span class="stat-num">${high}</span><span class="stat-label">High Priority</span></div>
+    <div class="stat-chip"><span class="stat-num">$${revenueFormatted}</span><span class="stat-label">Revenue Tracked</span></div>
+    <div class="stat-chip"><span class="stat-num">${totalBUs}</span><span class="stat-label">BUs Covered</span></div>
     <div class="stat-chip"><span class="stat-num">${totalRolesFormatted}</span><span class="stat-label">Open Roles Tracked</span></div>
   `;
 
