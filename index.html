@@ -418,7 +418,15 @@ const USERS = {
     // SHA-256 of "RTX2026" -- share with RTX AM, ask them to reset after first login
     hash: "66768618f7b7a74127fc68ca3c593d0a4fe462c3a2d235655d290de0c721fa2a",
     accounts: ["rtx"],
-    clearanceAccess: false  // Set to true to grant Clearance Landscape access, then redeploy hub
+    clearanceAccess: false
+  },
+  "boeing.am": {
+    name: "Boeing Account Manager",
+    role: "am",
+    // SHA-256 of "Boeing2026" -- share with Boeing AM, ask them to reset after first login
+    hash: "192983bbc4bdd80ce2ea7bac9a0faed03830c2c8c7d1e5e6be1aac484d34fd4d",
+    accounts: ["boeing"],
+    clearanceAccess: false
   }
   // To add more users, copy a block above and update username, name, hash, and accounts.
   // Use Admin Panel > Password Hash Tool to generate hashes for new passwords.
@@ -442,14 +450,15 @@ const ACCOUNTS = {
   },
   "boeing": {
     name: "Boeing",
-    sub: "Commercial Airplanes · Boeing Defense · Boeing Global Services",
+    sub: "BCA · BGS · BDS · Spirit · BIETC · BETC · Wisk · AvionX · Aurora · Insitu",
     url: "https://samswaro-collab.github.io/boeing-dashboard/",
     industry: "Aerospace & Defense",
-    location: "Seattle WA · St. Louis MO · Arlington VA",
+    location: "Seattle WA · St. Louis MO · Cambridge MA · Wichita KS",
     priority: "high",
-    updated: "March 2026",
-    roles: "200+", revenue: 66.5,
-    signal: "737 MAX production ramp · 777X certification · T-7A LRIP supply chain"
+    updated: "April 2026",
+    buRoles: { "BCA": 921, "Spirit AeroSystems": 107, "International": 145, "BGS": 50, "BDS": 75, "Wisk/AvionX": 52, "Aurora": 60, "Insitu": 50 },
+    revenue: 66.5,
+    signal: "737 MAX North Line · 777X FAA cert · Aurora X-65 DARPA · Insitu RQ-21 Blackjack"
   },
   "rtx": {
     name: "RTX Corporation",
@@ -710,6 +719,7 @@ function showPortal() {
   const hr = new Date().getHours();
   const _teamName = userAccounts.includes('textron') ? 'Textron-Cyient Account Team'
                   : userAccounts.includes('rtx')     ? 'RTX-Cyient Account Team'
+                  : userAccounts.includes('boeing')  ? 'Boeing-Cyient Account Team'
                   : uname.split(' ')[0];
   document.getElementById('portal-greeting').textContent = `Good ${hr<12?'morning':hr<17?'afternoon':'evening'}, ${_teamName}`;
   document.getElementById('portal-subtitle').textContent = userAccounts.length===0
