@@ -226,7 +226,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <button class="btn-login" onclick="doLogin()">SIGN IN &rarr;</button>
     <div id="login-error" class="login-error">Incorrect username or password. Please try again.</div>
-    <div class="login-footer"><a href="https://www.salesbeakon.com" style="color:#f59e0b;text-decoration:none;font-weight:700">salesbeakon.com</a> &nbsp;&bull;&nbsp; BEAKON &copy; 2026 &nbsp;&bull;&nbsp; Powered by AI</div>
+    <div class="login-footer"><a href="https://www.salesbeakon.com" style="color:#f59e0b;text-decoration:none;font-weight:700">salesbeakon.com</a> &nbsp;&bull;&nbsp; BEAKON &copy; 2026 &nbsp;&bull;&nbsp; Sales Intelligence powered by AI</div>
   </div>
 </div>
 
@@ -417,7 +417,7 @@ const ACCOUNTS = {
     location: "Fort Worth TX · Wichita KS",
     priority: "high",
     updated: "April 2026",
-    roles: "160+",
+    roles: "550+",
     signal: "FLRAA production ramp · Cessna Denali Part 23 cert · Citation Ascend NPI"
   },
   "boeing": {
@@ -439,8 +439,8 @@ const ACCOUNTS = {
     industry: "Aerospace & Defense",
     location: "Arlington VA · Windsor Locks CT · Tucson AZ",
     priority: "high",
-    updated: "March 2026",
-    roles: "180+",
+    updated: "April 2026",
+    roles: "3900+",
     signal: "GTF engine MRO ramp · Collins avionics upgrades · NGAD supply chain"
   },
   "honeywell": {
@@ -666,9 +666,7 @@ function showPortal() {
     ab.textContent='Admin Panel'; ab.onclick=showAdmin;
     hdr.appendChild(ab);
   }
-  const cb = document.createElement('button');
-  cb.className='portal-btn portal-btn-teal'; cb.textContent='Change Password'; cb.onclick=()=>openModal('modal-changepw');
-  hdr.appendChild(cb);
+  // Change Password removed from portal header
 
   // Greeting
   const hr = new Date().getHours();
@@ -680,10 +678,11 @@ function showPortal() {
   // Stats
   const high = userAccounts.filter(k=>ACCOUNTS[k]&&ACCOUNTS[k].priority==='high').length;
   const totalRoles = userAccounts.reduce((s,k)=>s+(parseInt((ACCOUNTS[k]||{}).roles)||0),0);
+  const totalRolesFormatted = totalRoles >= 1000 ? (totalRoles/1000).toFixed(1).replace(/\.0$/,'') + 'K+' : totalRoles + '+';
   document.getElementById('portal-stats').innerHTML=`
     <div class="stat-chip"><span class="stat-num">${userAccounts.length}</span><span class="stat-label">Accounts</span></div>
     <div class="stat-chip"><span class="stat-num">${high}</span><span class="stat-label">High Priority</span></div>
-    <div class="stat-chip"><span class="stat-num">${totalRoles}+</span><span class="stat-label">Open Roles Tracked</span></div>
+    <div class="stat-chip"><span class="stat-num">${totalRolesFormatted}</span><span class="stat-label">Open Roles Tracked</span></div>
   `;
 
   // Account grid
