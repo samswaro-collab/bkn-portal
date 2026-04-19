@@ -414,10 +414,11 @@ const ACCOUNTS = {
     url: "https://textron.salesbeakon.com",
     token: "bkn7x2t9p4q1m8w3e6r0y5u",
     industry: "Aerospace & Defense",
-    location: "Fort Worth TX · Wichita KS",
+    location: "Fort Worth TX · Wichita KS · Bangalore IN",
     priority: "high",
     updated: "April 2026",
-    roles: "550+",
+    // buRoles drives the roles total — update these when dashboard hiring data changes
+    buRoles: { "Bell Flight": 210, "Textron Aviation": 280, "Textron Systems": 35, "Textron India": 25 },
     signal: "FLRAA production ramp · Cessna Denali Part 23 cert · Citation Ascend NPI"
   },
   "boeing": {
@@ -440,7 +441,8 @@ const ACCOUNTS = {
     location: "Arlington VA · Windsor Locks CT · Tucson AZ",
     priority: "high",
     updated: "April 2026",
-    roles: "3900+",
+    // buRoles drives the roles total — update these when dashboard hiring data changes
+    buRoles: { "Collins Aerospace": 2100, "Pratt & Whitney": 1200, "Raytheon M&D": 600 },
     signal: "GTF engine MRO ramp · Collins avionics upgrades · NGAD supply chain"
   },
   "honeywell": {
@@ -578,6 +580,22 @@ const ACCOUNTS = {
 };
 
 // ════════════════════════════════════════════════
+// COMPUTE ROLES FROM BU BREAKDOWN (dynamic — no hardcoded totals)
+// When dashboard hiring data changes, update buRoles{} above and redeploy hub.
+// ════════════════════════════════════════════════
+(function computeRoles() {
+  Object.values(ACCOUNTS).forEach(function(a) {
+    if (a.buRoles && typeof a.buRoles === 'object') {
+      var total = Object.values(a.buRoles).reduce(function(s, n) { return s + n; }, 0);
+      a.roles = total + '+';
+      // Build tooltip-friendly breakdown string
+      a.rolesBreakdown = Object.entries(a.buRoles)
+        .map(function(e){ return e[0] + ': ' + e[1] + '+'; }).join(' · ');
+    }
+  });
+})();
+
+// ════════════════════════════════════════════════
 // SESSION STATE
 // ════════════════════════════════════════════════
 let SESSION = { user: null, hash: null, assigningUser: null };
@@ -712,6 +730,7 @@ function showPortal() {
             <span class="ac-roles">&#128084; ${a.roles} open roles</span>
             <span class="ac-updated">Updated ${a.updated}</span>
           </div>
+          ${a.rolesBreakdown ? `<div style="font-size:10px;color:var(--text3);margin-top:5px;line-height:1.5;">${a.rolesBreakdown}</div>` : ''}
         </div>
         <div class="ac-footer">
           <span class="ac-open-btn"><span>&#128270;</span> Open Dashboard</span>
