@@ -427,6 +427,14 @@ const USERS = {
     hash: "192983bbc4bdd80ce2ea7bac9a0faed03830c2c8c7d1e5e6be1aac484d34fd4d",
     accounts: ["boeing"],
     clearanceAccess: false
+  },
+  "honeywell.am": {
+    name: "Honeywell Account Manager",
+    role: "am",
+    // SHA-256 of "Honeywell2026" -- share with Honeywell AM, ask them to reset after first login
+    hash: "a9b4f3c2e1d8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2",
+    accounts: ["honeywell"],
+    clearanceAccess: false
   }
   // To add more users, copy a block above and update username, name, hash, and accounts.
   // Use Admin Panel > Password Hash Tool to generate hashes for new passwords.
@@ -476,14 +484,15 @@ const ACCOUNTS = {
   },
   "honeywell": {
     name: "Honeywell Aerospace",
-    sub: "Engines & Power Systems · Avionics · Connectivity",
+    sub: "Aerospace Technologies · Defense & Space · HTI Bangalore · HCE",
     url: "https://samswaro-collab.github.io/honeywell-dashboard/",
     industry: "Aerospace Systems",
-    location: "Phoenix AZ · Albuquerque NM · Minneapolis MN",
+    location: "Phoenix AZ · Tempe AZ · Clearfield UT · Bangalore IN",
     priority: "high",
-    updated: "March 2026",
-    roles: "120+", revenue: 9.8,
-    signal: "Advanced Air Mobility avionics · eAPU development · Anthem avionics platform"
+    updated: "April 2026",
+    buRoles: { "Aerospace Technologies": 280, "HTI Bangalore": 200, "Defense & Space": 90, "HCE / Forge": 60, "PMT": 30 },
+    revenue: 14.8,
+    signal: "Anthem avionics platform · APU production ramp · HTI Bengaluru expansion · eVTOL avionics (Joby/Archer)"
   },
   "bombardier": {
     name: "Bombardier",
