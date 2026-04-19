@@ -170,6 +170,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .no-accounts{text-align:center;padding:60px 20px;color:var(--text3);}
 .no-accounts-icon{font-size:40px;margin-bottom:12px;}
 .no-accounts-text{font-size:13px;}
+
+/* ── COMPANIES SCREEN ── */
+#screen-companies{flex-direction:column;background:var(--bg);}
+.companies-body{flex:1;padding:32px 28px;}
+.companies-welcome{margin-bottom:28px;}
+.companies-welcome h1{font-size:20px;font-weight:800;color:#fff;}
+.companies-welcome p{font-size:12px;color:var(--text2);margin-top:4px;}
+.companies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.company-tile{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.25s;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
+.company-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal2));opacity:0;transition:opacity 0.2s;}
+.company-tile:not(.company-tile-placeholder):hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+.company-tile:not(.company-tile-placeholder):hover::before{opacity:1;}
+.company-tile-placeholder{cursor:default;opacity:0.45;}
+.co-tile-header{display:flex;align-items:center;gap:14px;}
+.company-tile-logo{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;}
+.company-tile-name{font-size:18px;font-weight:900;color:#fff;letter-spacing:0.5px;}
+.company-tile-tagline{font-size:11px;color:var(--text2);margin-top:3px;}
+.company-tile-hq{font-size:10px;color:var(--text3);margin-top:4px;}
+.company-tile-meta{display:flex;gap:20px;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.company-tile-stat{display:flex;flex-direction:column;gap:2px;}
+.cstat-num{font-size:18px;font-weight:800;color:var(--teal);}
+.cstat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;}
+.company-tile-cta{font-size:12px;font-weight:700;color:var(--teal);}
+.company-tile-placeholder .company-tile-cta{color:var(--text3);}
 </style>
 </head>
 <body>
@@ -228,6 +252,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <span onclick="togglePw()" id="pw-eye-btn" style="position:absolute;right:13px;top:50%;transform:translateY(-50%);cursor:pointer;line-height:1;user-select:none;font-size:16px;opacity:0.6;" title="Show/hide password">&#128065;</span>
       </div>
     </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+      <input type="checkbox" id="remember-me" style="width:15px;height:15px;accent-color:#f59e0b;cursor:pointer;flex-shrink:0;">
+      <label for="remember-me" style="font-size:12px;color:#d97706;cursor:pointer;user-select:none;">Remember me on this device</label>
+    </div>
     <button class="btn-login" onclick="doLogin()">SIGN IN &rarr;</button>
     <div id="login-error" class="login-error">Incorrect username or password. Please try again.</div>
     <div class="login-footer"><a href="https://www.salesbeakon.com" style="color:#f59e0b;text-decoration:none;font-weight:700">salesbeakon.com</a> &nbsp;&bull;&nbsp; BEAKON &copy; 2026 &nbsp;&bull;&nbsp; Sales Intelligence powered by AI</div>
@@ -273,6 +301,44 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
 </div>
 
+<!-- ══════════════════════════════════════ COMPANIES ═══ -->
+<div id="screen-companies" class="screen" style="flex-direction:column;">
+  <header class="portal-header">
+    <div class="portal-brand">
+      <div class="portal-brand-icon">
+        <svg width="18" height="18" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 16 L24 3"  stroke="#fff" stroke-width="3" opacity="0.6" stroke-linecap="round"/>
+          <path d="M40 16 L40 0"  stroke="#fff" stroke-width="3" opacity="0.9" stroke-linecap="round"/>
+          <path d="M40 16 L56 3"  stroke="#fff" stroke-width="3" opacity="0.6" stroke-linecap="round"/>
+          <rect x="33" y="16" width="14" height="9" rx="2" fill="#fff"/>
+          <rect x="30" y="24" width="20" height="3" rx="1.5" fill="#fff" opacity="0.9"/>
+          <path d="M34 27 L30 62 L50 62 L46 27 Z" fill="#fff" opacity="0.25" stroke="#fff" stroke-width="2.5"/>
+          <path d="M33 37 L47 37" stroke="#fff" stroke-width="2" opacity="0.65"/>
+          <path d="M32 47 L48 47" stroke="#fff" stroke-width="2" opacity="0.65"/>
+          <rect x="25" y="62" width="30" height="5" rx="2.5" fill="#fff" opacity="0.95"/>
+        </svg>
+      </div>
+      <div><div class="portal-brand-name">BEAKON</div><div class="portal-brand-tagline">Signal to Signed.</div></div>
+    </div>
+    <div class="portal-spacer"></div>
+    <div id="co-header-actions" style="display:flex;gap:8px;align-items:center;"></div>
+    <div class="portal-user-pill" onclick="toggleUserMenu()">
+      <div class="portal-avatar" id="co-portal-avatar">SM</div>
+      <div><div class="portal-user-name" id="co-portal-uname">Loading...</div>
+      <div class="portal-user-role" id="co-portal-urole">Account Manager</div></div>
+    </div>
+    <button class="portal-btn" onclick="doLogout()">Sign Out</button>
+  </header>
+  <div class="companies-body">
+    <div class="companies-welcome">
+      <h1 id="companies-greeting">Good morning</h1>
+      <p id="companies-subtitle">Select a company to view its intelligence accounts.</p>
+    </div>
+    <div class="section-label" style="margin-bottom:16px;">Companies</div>
+    <div class="companies-grid" id="companies-grid"></div>
+  </div>
+</div>
+
 <!-- ════════════════════════════════════════════ ADMIN ═══ -->
 <div id="screen-admin" class="screen" style="flex-direction:column;">
   <header class="admin-header">
@@ -294,7 +360,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <span class="admin-badge">ADMIN</span>
     <div class="portal-spacer"></div>
-    <button class="portal-btn portal-btn-teal" onclick="showPortal()">&#8592; Back to Portal</button>
+    <button class="portal-btn portal-btn-teal" onclick="showCompanies()">&#8592; Back to Portal</button>
     <button class="portal-btn" onclick="doLogout()">Sign Out</button>
   </header>
   <div class="admin-body">
@@ -402,7 +468,8 @@ const USERS = {
     // SHA-256 of "Beakon2026" -- change immediately after first login
     hash: "87440cbb3d9f1aa374baf55257e59df318272f8c1cb00c1189252411e2ef644d",
     accounts: ["*"],
-    clearanceAccess: true   // Grants access to Clearance Landscape section in RTX dashboard
+    company: "*",            // "*" = can see all companies (BEAKON super-admin)
+    clearanceAccess: true    // Grants access to Clearance Landscape section in RTX dashboard
   },
   "textron.am": {
     name: "Textron Account Manager",
@@ -410,7 +477,8 @@ const USERS = {
     // SHA-256 of "Textron2026" -- share with AM, ask them to request a reset after first login
     hash: "ac4d0ae6e476acf7fb0e857b8b9a7f8f9947f26309195c09c976d8e075c63f1a",
     accounts: ["textron"],
-    clearanceAccess: false  // Set to true to grant Clearance Landscape access, then redeploy hub
+    company: "cyient",
+    clearanceAccess: false   // Set to true to grant Clearance Landscape access, then redeploy hub
   },
   "rtx.am": {
     name: "RTX Account Manager",
@@ -418,6 +486,7 @@ const USERS = {
     // SHA-256 of "RTX2026" -- share with RTX AM, ask them to reset after first login
     hash: "66768618f7b7a74127fc68ca3c593d0a4fe462c3a2d235655d290de0c721fa2a",
     accounts: ["rtx"],
+    company: "cyient",
     clearanceAccess: false
   },
   "boeing.am": {
@@ -426,6 +495,7 @@ const USERS = {
     // SHA-256 of "Boeing2026" -- share with Boeing AM, ask them to reset after first login
     hash: "192983bbc4bdd80ce2ea7bac9a0faed03830c2c8c7d1e5e6be1aac484d34fd4d",
     accounts: ["boeing"],
+    company: "cyient",
     clearanceAccess: false
   },
   "honeywell.am": {
@@ -434,9 +504,10 @@ const USERS = {
     // SHA-256 of "Honeywell2026" -- share with Honeywell AM, ask them to reset after first login
     hash: "a9b4f3c2e1d8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2",
     accounts: ["honeywell"],
+    company: "cyient",
     clearanceAccess: false
   }
-  // To add more users, copy a block above and update username, name, hash, and accounts.
+  // To add more users, copy a block above and update username, name, hash, accounts, and company.
   // Use Admin Panel > Password Hash Tool to generate hashes for new passwords.
   // To grant Clearance Landscape access: set clearanceAccess: true and redeploy beakon_hub.
 };
@@ -618,6 +689,34 @@ const ACCOUNTS = {
 };
 
 // ════════════════════════════════════════════════
+// COMPANIES — Multi-tenant company registry
+// Each company is a paying client of BEAKON.
+// "accounts" lists which ACCOUNTS keys this company
+// has subscribed to for sales intelligence.
+// To onboard a new company: add an entry here,
+// assign users to it via company: "key", and deploy.
+// ════════════════════════════════════════════════
+const COMPANIES = {
+  "cyient": {
+    name: "Cyient",
+    tagline: "Engineering Technology Solutions",
+    initial: "C",
+    color: "#00d4c8",
+    accent: "#007a75",
+    hq: "Hyderabad, India",
+    tier: "active",
+    // All accounts this company has subscribed to (BEAKON sales intelligence)
+    accounts: [
+      "textron","boeing","rtx","honeywell",
+      "bombardier","embraer","bae","thales","parker",
+      "dhc","triumph","ametek","transdigm","jeppesen","gea"
+    ]
+  }
+  // Future paying clients:
+  // "company2": { name:"Company 2", tagline:"...", initial:"2", color:"#...", accent:"#...", hq:"...", tier:"active", accounts:[...] }
+};
+
+// ════════════════════════════════════════════════
 // COMPUTE ROLES FROM BU BREAKDOWN (dynamic — no hardcoded totals)
 // When dashboard hiring data changes, update buRoles{} above and redeploy hub.
 // ════════════════════════════════════════════════
@@ -666,21 +765,33 @@ function togglePw() {
 async function doLogin() {
   const u = document.getElementById('login-user').value.trim().toLowerCase();
   const p = document.getElementById('login-pass').value;
+  const remember = document.getElementById('remember-me').checked;
   const err = document.getElementById('login-error');
   err.style.display = 'none';
   if (!u || !p) { err.style.display='block'; err.textContent='Please enter your username and password.'; return; }
   const hash = await sha256(p);
   const user = USERS[u];
   if (!user || user.hash !== hash) { err.style.display='block'; err.textContent='Incorrect username or password. Please try again.'; return; }
+  // Save or clear remembered credentials
+  if (remember) {
+    localStorage.setItem('beakon_saved_user', u);
+    localStorage.setItem('beakon_saved_pass', p);
+    localStorage.setItem('beakon_remember', '1');
+  } else {
+    localStorage.removeItem('beakon_saved_user');
+    localStorage.removeItem('beakon_saved_pass');
+    localStorage.removeItem('beakon_remember');
+  }
   SESSION.user = u;
   SESSION.hash = hash;
   sessionStorage.setItem('beakon_session', JSON.stringify({
     user: u,
     name: user.name,
     role: user.role,
+    company: user.company || 'cyient',
     clearanceAccess: user.clearanceAccess === true
   }));
-  showPortal();
+  showCompanies();
 }
 
 function doLogout() {
@@ -700,13 +811,118 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function showPortal() {
+// ════════════════════════════════════════════════
+// COMPANIES SCREEN
+// ════════════════════════════════════════════════
+function showCompanies() {
   const sess = SESSION.user ? USERS[SESSION.user] : JSON.parse(sessionStorage.getItem('beakon_session')||'null');
   if (!sess) { showScreen('screen-login'); return; }
   const uname = typeof sess === 'object' && sess.name ? sess.name : (USERS[SESSION.user]||{}).name;
   const role  = typeof sess === 'object' && sess.role ? sess.role : (USERS[SESSION.user]||{}).role;
   const ukey  = SESSION.user || (typeof sess === 'object' ? sess.user : null);
-  const userAccounts = USERS[ukey] ? (USERS[ukey].accounts.includes('*') ? Object.keys(ACCOUNTS) : USERS[ukey].accounts) : [];
+  const userObj = USERS[ukey];
+
+  // Header
+  const initials = (uname||'??').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('co-portal-avatar').textContent = initials;
+  document.getElementById('co-portal-uname').textContent = uname;
+  document.getElementById('co-portal-urole').textContent = role==='admin' ? 'Administrator' : 'Account Manager';
+
+  const hdr = document.getElementById('co-header-actions');
+  hdr.innerHTML = '';
+  if (role==='admin') {
+    const ab = document.createElement('button');
+    ab.className='portal-btn'; ab.style.color='#f87171'; ab.style.borderColor='rgba(200,25,42,0.4)';
+    ab.textContent='Admin Panel'; ab.onclick=showAdmin;
+    hdr.appendChild(ab);
+  }
+
+  // Greeting — always use first name (no team-name confusion)
+  const hr = new Date().getHours();
+  const firstName = (uname||'there').split(' ')[0];
+  document.getElementById('companies-greeting').textContent =
+    `Good ${hr<12?'morning':hr<17?'afternoon':'evening'}, ${firstName}`;
+
+  // Determine which companies this user can see
+  const userCompanyField = userObj ? userObj.company : 'cyient';
+  const userCompanyKeys = userCompanyField === '*'
+    ? Object.keys(COMPANIES)
+    : [userCompanyField].filter(k => COMPANIES[k]);
+
+  document.getElementById('companies-subtitle').textContent =
+    userCompanyKeys.length === 1
+      ? `You have ${userCompanyKeys.length} company workspace. Click it to view its accounts.`
+      : `You have access to ${userCompanyKeys.length} company workspaces. Select one to view its accounts.`;
+
+  // Build active company tiles
+  const activeTiles = userCompanyKeys.map(k => {
+    const c = COMPANIES[k];
+    const accCount = c.accounts.filter(a => ACCOUNTS[a]).length;
+    const totalRevenue = c.accounts.reduce((s,a) => s + ((ACCOUNTS[a]||{}).revenue||0), 0);
+    const revStr = totalRevenue >= 100 ? Math.round(totalRevenue)+'B' : totalRevenue.toFixed(1)+'B';
+    const totalRoles = c.accounts.reduce((s,a) => s + (parseInt((ACCOUNTS[a]||{}).roles)||0), 0);
+    const rolesStr = totalRoles >= 1000 ? (totalRoles/1000).toFixed(1)+'K+' : totalRoles+'+';
+    return `<div class="company-tile" onclick="showPortal('${k}')">
+      <div class="co-tile-header">
+        <div class="company-tile-logo" style="background:linear-gradient(135deg,${c.color},${c.accent});">${c.initial}</div>
+        <div>
+          <div class="company-tile-name">${c.name}</div>
+          <div class="company-tile-tagline">${c.tagline}</div>
+          <div class="company-tile-hq">&#127968; ${c.hq}</div>
+        </div>
+      </div>
+      <div class="company-tile-meta">
+        <div class="company-tile-stat"><span class="cstat-num">${accCount}</span><span class="cstat-label">Accounts</span></div>
+        <div class="company-tile-stat"><span class="cstat-num">$${revStr}</span><span class="cstat-label">Revenue Tracked</span></div>
+        <div class="company-tile-stat"><span class="cstat-num">${rolesStr}</span><span class="cstat-label">Open Roles</span></div>
+      </div>
+      <div class="company-tile-cta">View Accounts &rarr;</div>
+    </div>`;
+  }).join('');
+
+  // Placeholder tiles for admin (future onboarding slots)
+  let placeholderTiles = '';
+  if (role === 'admin') {
+    [2, 3, 4].forEach(i => {
+      placeholderTiles += `<div class="company-tile company-tile-placeholder">
+        <div class="co-tile-header">
+          <div class="company-tile-logo" style="background:transparent;border:2px dashed rgba(255,255,255,0.15);color:var(--text3);">+</div>
+          <div>
+            <div class="company-tile-name" style="color:var(--text3);">Company ${i}</div>
+            <div class="company-tile-tagline" style="color:var(--text3);">Onboard a new client</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6;">When you onboard a new paying customer, their dedicated company workspace will appear here — with their own account team, subscribed accounts, and sales intel hub.</div>
+        <div class="company-tile-cta">Contact Beakon to Onboard &rarr;</div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('companies-grid').innerHTML = activeTiles + placeholderTiles;
+  showScreen('screen-companies');
+}
+
+function showPortal(companyKey) {
+  const sess = SESSION.user ? USERS[SESSION.user] : JSON.parse(sessionStorage.getItem('beakon_session')||'null');
+  if (!sess) { showScreen('screen-login'); return; }
+  const uname = typeof sess === 'object' && sess.name ? sess.name : (USERS[SESSION.user]||{}).name;
+  const role  = typeof sess === 'object' && sess.role ? sess.role : (USERS[SESSION.user]||{}).role;
+  const ukey  = SESSION.user || (typeof sess === 'object' ? sess.user : null);
+  const userObj = USERS[ukey];
+
+  // Resolve which company we're viewing
+  const cKey = companyKey
+    || (userObj && userObj.company !== '*' ? userObj.company : null)
+    || Object.keys(COMPANIES)[0];
+  const company = COMPANIES[cKey];
+  SESSION.activeCompany = cKey;
+
+  // Determine which accounts to show: intersection of user's accounts + company's subscribed accounts
+  const allUserAccs = userObj
+    ? (userObj.accounts.includes('*') ? Object.keys(ACCOUNTS) : userObj.accounts)
+    : [];
+  const companyAccs = company ? company.accounts : Object.keys(ACCOUNTS);
+  const userAccounts = allUserAccs.filter(k => companyAccs.includes(k));
 
   // Header
   const initials = (uname||'??').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
@@ -716,24 +932,25 @@ function showPortal() {
 
   const hdr = document.getElementById('portal-header-actions');
   hdr.innerHTML = '';
+  // Back to Companies
+  const bb = document.createElement('button');
+  bb.className='portal-btn'; bb.textContent='← Companies'; bb.onclick=showCompanies;
+  hdr.appendChild(bb);
   if (role==='admin') {
     const ab = document.createElement('button');
     ab.className='portal-btn'; ab.style.color='#f87171'; ab.style.borderColor='rgba(200,25,42,0.4)';
     ab.textContent='Admin Panel'; ab.onclick=showAdmin;
     hdr.appendChild(ab);
   }
-  // Change Password removed from portal header
 
-  // Greeting
+  // Greeting — use company name, not the user's team assignment
   const hr = new Date().getHours();
-  const _teamName = userAccounts.includes('textron') ? 'Textron-Cyient Account Team'
-                  : userAccounts.includes('rtx')     ? 'RTX-Cyient Account Team'
-                  : userAccounts.includes('boeing')  ? 'Boeing-Cyient Account Team'
-                  : uname.split(' ')[0];
-  document.getElementById('portal-greeting').textContent = `Good ${hr<12?'morning':hr<17?'afternoon':'evening'}, ${_teamName}`;
+  const companyLabel = company ? company.name : 'Your';
+  document.getElementById('portal-greeting').textContent =
+    `Good ${hr<12?'morning':hr<17?'afternoon':'evening'} — ${companyLabel} Accounts`;
   document.getElementById('portal-subtitle').textContent = userAccounts.length===0
     ? 'No accounts assigned yet. Contact your administrator.'
-    : `You have ${userAccounts.length} account${userAccounts.length>1?'s':''} assigned. Click any card to open its intelligence dashboard.`;
+    : `${companyLabel} has ${userAccounts.length} account${userAccounts.length>1?'s':''} in BEAKON. Click any card to open its intelligence dashboard.`;
 
   // Stats
   const totalRoles = userAccounts.reduce((s,k)=>s+(parseInt((ACCOUNTS[k]||{}).roles)||0),0);
@@ -926,15 +1143,42 @@ function showMsg(el, type, text) {
 }
 
 // ════════════════════════════════════════════════
-// INIT — restore session on reload
+// INIT — restore session on reload + Remember Me
 // ════════════════════════════════════════════════
 (function(){
+  // 1. Restore active session (tab/window still open)
   const sess = sessionStorage.getItem('beakon_session');
   if (sess) {
     try {
       const s = JSON.parse(sess);
-      if (s && s.user && USERS[s.user]) { SESSION.user=s.user; SESSION.hash=USERS[s.user].hash; showPortal(); return; }
+      if (s && s.user && USERS[s.user]) { SESSION.user=s.user; SESSION.hash=USERS[s.user].hash; showCompanies(); return; }
     } catch(e){}
+  }
+  // 2. Auto-fill remembered credentials if "Remember Me" was checked previously
+  if (localStorage.getItem('beakon_remember') === '1') {
+    const savedUser = localStorage.getItem('beakon_saved_user') || '';
+    const savedPass = localStorage.getItem('beakon_saved_pass') || '';
+    if (savedUser && savedPass) {
+      document.getElementById('login-user').value = savedUser;
+      document.getElementById('login-pass').value = savedPass;
+      document.getElementById('remember-me').checked = true;
+      // Auto-login silently
+      (async function(){
+        const hash = await sha256(savedPass);
+        const user = USERS[savedUser];
+        if (user && user.hash === hash) {
+          SESSION.user = savedUser;
+          SESSION.hash = hash;
+          sessionStorage.setItem('beakon_session', JSON.stringify({
+            user: savedUser, name: user.name, role: user.role,
+            company: user.company || 'cyient',
+            clearanceAccess: user.clearanceAccess === true
+          }));
+          showCompanies();
+        }
+      })();
+      return;
+    }
   }
   showScreen('screen-login');
 })();
