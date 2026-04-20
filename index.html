@@ -1116,6 +1116,13 @@ function showCompanies() {
       ? `You have ${userCompanyKeys.length} company workspace. Click it to view its accounts.`
       : `You have access to ${userCompanyKeys.length} company workspaces. Select one to view its accounts.`;
 
+  // BEAKON_AM_SKIP_COMPANIES
+  // AM users with a single company go straight to their account list — skip company tile screen
+  if (role !== 'admin' && userCompanyKeys.length === 1) {
+    showPortal(userCompanyKeys[0]);
+    return;
+  }
+
   // Build active company tiles
   const activeTiles = userCompanyKeys.map(k => {
     const c = COMPANIES[k];
@@ -1195,8 +1202,17 @@ function showPortal(companyKey) {
   const hdr = document.getElementById('portal-header-actions');
   hdr.innerHTML = '';
   // Back to Companies
+  // BEAKON_AM_BACK_PATCHED
   const bb = document.createElement('button');
-  bb.className='portal-btn'; bb.textContent='← Companies'; bb.onclick=showCompanies;
+  if (role === 'admin') {
+    bb.className='portal-btn'; bb.textContent='← Companies'; bb.onclick=showCompanies;
+  } else {
+    bb.className='portal-btn';
+    bb.textContent='Sign Out';
+    bb.style.color='#f87171';
+    bb.style.borderColor='rgba(200,25,42,0.35)';
+    bb.onclick=doLogout;
+  }
   hdr.appendChild(bb);
   if (role==='admin') {
     const ab = document.createElement('button');
