@@ -1,0 +1,266 @@
+name: BEAKON — Master Refresh (All Dashboards)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Single workflow that refreshes ALL 15 BEAKON dashboards every 5 days.
+#
+# What it does:
+#   1. Updates lastRefreshed date across ALL dashboards
+#   2. Scrapes live job counts for Boeing (jobs.boeing.com) and RTX (careers.rtx.com)
+#   3. Pushes updated index.html back to each dashboard repo via GitHub API
+#
+# Setup (one-time):
+#   1. Place this file in beakon-hub repo at: .github/workflows/beakon_master_refresh.yml
+#   2. In beakon-hub repo → Settings → Secrets and variables → Actions:
+#      Add secret: BEAKON_PAT  (Personal Access Token, repo scope, access to all dashboard repos)
+#   3. The workflow will run automatically every 5 days + on manual trigger
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  schedule:
+    - cron: '0 6 */5 * *'   # Every 5 days at 06:00 UTC
+  workflow_dispatch:          # Manual trigger from GitHub Actions tab
+
+jobs:
+  master-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout beakon-hub
+        uses: actions/checkout@v4
+
+      - name: Run BEAKON Master Refresh
+        env:
+          BEAKON_PAT: ${{ secrets.BEAKON_PAT }}
+          GITHUB_OWNER: samswaro-collab
+        shell: python
+        run: |
+          import base64, json, datetime, time, re, urllib.request, urllib.error, urllib.parse, os
+
+          # ── CONFIG ───────────────────────────────────────────────────────────
+          OWNER  = os.environ["GITHUB_OWNER"]
+          TOKEN  = os.environ["BEAKON_PAT"]
+          BRANCH = "main"
+
+          TODAY     = datetime.datetime.utcnow().strftime("%b %d, %Y")
+          TODAY_ISO = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+          # All dashboard repos + the date-string they embed
+          DASHBOARDS = [
+              { "key": "boeing",       "repo": "boeing-dashboard",       "live_scrape": "boeing" },
+              { "key": "rtx",          "repo": "rtx-dashboard",          "live_scrape": "rtx"    },
+              { "key": "honeywell",    "repo": "honeywell-dashboard",    "live_scrape": None },
+              { "key": "ge",           "repo": "ge-aerospace-dashboard", "live_scrape": None },
+              { "key": "bae",          "repo": "bae-dashboard",          "live_scrape": None },
+              { "key": "bombardier",   "repo": "bombardier-dashboard",   "live_scrape": None },
+              { "key": "embraer",      "repo": "embraer-dashboard",      "live_scrape": None },
+              { "key": "parker",       "repo": "parker-dashboard",       "live_scrape": None },
+              { "key": "textron",      "repo": "textron-dashboard",      "live_scrape": None },
+              { "key": "gulfstream",   "repo": "gulfstream-dashboard",  "live_scrape": None },
+              { "key": "hondaaircraft","repo": "hondaaircraft-dashboard","live_scrape": None },
+              { "key": "crane",        "repo": "crane-dashboard",        "live_scrape": None },
+              { "key": "dhc",          "repo": "dhc-dashboard",          "live_scrape": None },
+              { "key": "beakon",       "repo": "beakon-hub",             "live_scrape": None },
+          ]
+
+          # ── GITHUB API HELPERS ────────────────────────────────────────────────
+          def gh(method, path, payload=None):
+              url  = f"https://api.github.com{path}"
+              body = json.dumps(payload).encode() if payload else None
+              req  = urllib.request.Request(url, data=body, method=method, headers={
+                  "Authorization": f"token {TOKEN}",
+                  "Accept":        "application/vnd.github+json",
+                  "Content-Type":  "application/json",
+                  "User-Agent":    "beakon-master-refresh/1.0",
+              })
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      return json.loads(r.read()), r.status
+              except urllib.error.HTTPError as e:
+                  return json.loads(e.read().decode() or "{}"), e.code
+
+          def get_file(repo, path="index.html"):
+              data, status = gh("GET", f"/repos/{OWNER}/{repo}/contents/{path}?ref={BRANCH}")
+              if status != 200:
+                  return None, None
+              content = base64.b64decode(data["content"]).decode("utf-8")
+              return content, data["sha"]
+
+          def push_file(repo, path, content_str, sha, commit_msg):
+              payload = {
+                  "message": commit_msg,
+                  "content": base64.b64encode(content_str.encode("utf-8")).decode(),
+                  "branch":  BRANCH,
+                  "sha":     sha,
+              }
+              result, status = gh("PUT", f"/repos/{OWNER}/{repo}/contents/{path}", payload)
+              return status in (200, 201)
+
+          # ── LIVE SCRAPE: BOEING ───────────────────────────────────────────────
+          def scrape_boeing():
+              """Fetch live job counts from jobs.boeing.com API."""
+              print("  [Boeing] Scraping jobs.boeing.com...")
+              BASELINE = {
+                  "bca": 921, "bgs": 50, "bds": 75,
+                  "aurora": 60, "insitu": 50,
+              }
+              searches = {
+                  "bca": "Commercial Airplanes",
+                  "bgs": "Global Services",
+                  "bds": "Defense Space Security",
+                  "aurora": "Aurora Flight Sciences",
+                  "insitu": "Insitu",
+              }
+              results = dict(BASELINE)
+              for key, term in searches.items():
+                  url = ("https://jobs.boeing.com/api/apply/v2/jobs?domain=boeing.com"
+                         "&keyword=" + urllib.parse.quote(term) + "&start=0&num=1")
+                  try:
+                      req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                      with urllib.request.urlopen(req, timeout=12) as r:
+                          data = json.loads(r.read())
+                          count = data.get("totalHits", 0)
+                          if count and count > 0:
+                              results[key] = count
+                              print(f"    {key}: {count} (live)")
+                          else:
+                              print(f"    {key}: {results[key]} (baseline)")
+                  except Exception as e:
+                      print(f"    {key}: {results[key]} (baseline — error: {e})")
+              return results
+
+          # ── LIVE SCRAPE: RTX ──────────────────────────────────────────────────
+          def scrape_rtx():
+              """Fetch approximate RTX job counts from careers.rtx.com."""
+              print("  [RTX] Scraping careers.rtx.com...")
+              FALLBACK = {"collins": 827, "pw": 505, "raytheon": 2575}
+              results  = dict(FALLBACK)
+              BUS = {
+                  "collins":  ("Collins Aerospace", "Cedar Rapids"),
+                  "pw":       ("Pratt Whitney",     "Middletown"),
+                  "raytheon": ("Raytheon",          "Tucson"),
+              }
+              headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+              for key, (kw, loc) in BUS.items():
+                  url = (f"https://careers.rtx.com/global/en/search-results"
+                         f"?keywords={urllib.parse.quote(kw)}&location={urllib.parse.quote(loc)}")
+                  try:
+                      req = urllib.request.Request(url, headers=headers)
+                      with urllib.request.urlopen(req, timeout=12) as r:
+                          html = r.read().decode("utf-8", errors="ignore")
+                      patterns = [
+                          r'"totalCount"\s*:\s*(\d+)',
+                          r'(\d+)\s+(?:job|result|position)s?\s+found',
+                          r'(\d{1,4})\s+Results',
+                      ]
+                      found = False
+                      for pat in patterns:
+                          m = re.search(pat, html, re.IGNORECASE)
+                          if m:
+                              count = int(m.group(1))
+                              if 0 < count < 5000:
+                                  results[key] = count
+                                  print(f"    {key}: {count} (live)")
+                                  found = True
+                                  break
+                      if not found:
+                          print(f"    {key}: {results[key]} (fallback)")
+                  except Exception as e:
+                      print(f"    {key}: {results[key]} (fallback — error: {e})")
+              return results
+
+          # ── DATE PATTERN REPLACER ────────────────────────────────────────────
+          # Matches: "Apr 19, 2026" | "Apr 19, 2026" | "19 Apr 2026" | ISO 8601
+          DATE_PATTERNS = [
+              # JS object value:  lastRefreshed: "Apr 19, 2026"
+              (r'(lastRefreshed\s*:\s*")[^"]*(")',          f'\\g<1>{TODAY}\\g<2>'),
+              # HTML pill / span: >Apr 19, 2026<
+              (r'(Last\s+Refreshed[^>]*>)[^<]*(</)',        f'\\g<1>{TODAY}\\g<2>'),
+              # Generic: "Apr 19, 2026" style inside JS strings (catch-all)
+              (r'("[A-Z][a-z]{2}\s+\d{1,2},\s+\d{4}")',    f'"{TODAY}"'),
+          ]
+
+          def update_date(html):
+              """Replace all lastRefreshed date strings in the HTML."""
+              for pat, repl in DATE_PATTERNS:
+                  html = re.sub(pat, repl, html)
+              return html
+
+          # ── BOEING JOB COUNT UPDATER ──────────────────────────────────────────
+          def update_boeing_counts(html, counts):
+              """Patch job count numbers directly in the Boeing HTML data object."""
+              replacements = {
+                  # Pattern: openRoles: 1234  (the total open roles field)
+                  r'(openRoles\s*:\s*)\d+':    f'\\g<1>{sum(counts.values())}',
+              }
+              for pat, repl in replacements.items():
+                  html = re.sub(pat, repl, html)
+              return html
+
+          # ── MAIN LOOP ────────────────────────────────────────────────────────
+          boeing_counts = None
+          rtx_counts    = None
+
+          print(f"\n{'═'*58}")
+          print(f"  BEAKON Master Refresh — {TODAY}")
+          print(f"{'═'*58}\n")
+
+          ok_count  = 0
+          err_count = 0
+
+          for dash in DASHBOARDS:
+              repo  = dash["repo"]
+              key   = dash["key"]
+              scrape = dash["live_scrape"]
+
+              print(f"[{key}] Fetching index.html from {repo}...")
+              html, sha = get_file(repo)
+
+              if html is None:
+                  print(f"  ⚠️  Could not fetch — repo may not exist yet. Skipping.\n")
+                  err_count += 1
+                  continue
+
+              # 1. Update date
+              html_new = update_date(html)
+
+              # 2. Live scrape enrichment
+              if scrape == "boeing":
+                  if boeing_counts is None:
+                      boeing_counts = scrape_boeing()
+                  html_new = update_boeing_counts(html_new, boeing_counts)
+
+              elif scrape == "rtx":
+                  if rtx_counts is None:
+                      rtx_counts = scrape_rtx()
+                  # RTX counts embedded in data object — update openRoles total
+                  total_rtx = sum(rtx_counts.values())
+                  html_new  = re.sub(r'(openRoles\s*:\s*)\d+', f'\\g<1>{total_rtx}', html_new)
+
+              # 3. Push if changed
+              if html_new == html:
+                  print(f"  ℹ️  No changes needed — already up to date.\n")
+                  ok_count += 1
+                  continue
+
+              success = push_file(
+                  repo, "index.html", html_new, sha,
+                  f"Auto-refresh: {key} dashboard {TODAY} [skip ci]"
+              )
+
+              if success:
+                  print(f"  ✅  {key} updated → lastRefreshed: {TODAY}\n")
+                  ok_count += 1
+              else:
+                  print(f"  ❌  {key} push failed.\n")
+                  err_count += 1
+
+              time.sleep(0.6)   # stay within GitHub API rate limits
+
+          print(f"{'═'*58}")
+          print(f"  Done — {ok_count} updated, {err_count} errors")
+          print(f"  Refresh timestamp: {TODAY_ISO}")
+          print(f"{'═'*58}\n")
+
+          if err_count > 0:
+              raise SystemExit(f"{err_count} dashboard(s) failed to update.")
