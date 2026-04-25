@@ -1440,12 +1440,22 @@ function showPortal(companyKey) {
   if (userAccounts.length === 0) {
     grid.innerHTML = '<div class="no-accounts"><div class="no-accounts-icon">&#128270;</div><div class="no-accounts-text">No accounts assigned yet.<br>Contact your BEAKON administrator.</div></div>';
   } else {
-    grid.innerHTML = userAccounts.map(k => {
+    // BEAKON sort: deployed+working tiles at top, planned at bottom
+    const _TIER = { boeing:1, rtx:1, honeywell:1, ge:1, embraer:1, parker:1, dhc:1, crane:1, gulfstream:1, hondaaircraft:1, textron:2, bae:2, bombardier:2 };
+    const _seen = new Set();
+    const _sorted = userAccounts
+      .filter(k => { if (_seen.has(k)) return false; _seen.add(k); return true; })
+      .slice()
+      .sort((a,b) => (_TIER[a]||3) - (_TIER[b]||3));
+    grid.innerHTML = _sorted.map(k => {
       const a = ACCOUNTS[k]; if (!a) return '';
+      const _t = _TIER[k] || 3;
+      const _comingSoon = (_t === 3) ? '<div style="position:absolute;top:8px;right:8px;font-size:9px;background:rgba(100,116,139,0.3);color:#94a3b8;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:0.5px;">COMING SOON</div>' : '';
       const pc = a.priority==='high'?'priority-high':a.priority==='medium'?'priority-medium':'priority-low';
       const pl = a.priority==='high'?'HIGH PRIORITY':a.priority==='medium'?'MEDIUM':'LOW';
       const dashUrl = a.token ? `${a.url}?t=${a.token}` : a.url;
-      return `<a class="account-card" href="${dashUrl}" target="_blank">
+      return `<a class="account-card" href="${dashUrl}" target="_blank" style="${_t===3?'opacity:0.55;':''}position:relative;">
+        ${_comingSoon}
         <div class="ac-top">
           <div class="ac-top-row">
             <div><div class="ac-name">${a.name}</div><div class="ac-sub">${a.sub}</div></div>
