@@ -1248,7 +1248,7 @@ function showPortal(companyKey) {
     grid.innerHTML = '<div class="no-accounts"><div class="no-accounts-icon">&#128270;</div><div class="no-accounts-text">No accounts assigned yet.<br>Contact your BEAKON administrator.</div></div>';
   } else {
     // BEAKON sort: deployed+working tiles at top, planned at bottom
-    const _TIER = { boeing:1, rtx:1, honeywell:1, gea:1, embraer:1, parker:1, dhc:1, crane:1, gulfstream:1, hondaaircraft:1, textron:2, bae:2, bombardier:2 };
+    const _TIER = { boeing:1, rtx:1, honeywell:1, gea:1, embraer:1, parker:1, dhc:1, crane:1, gulfstream:1, hondaaircraft:1, textron:2, bae:2, bombardier:2, neon:3, ametek:3, transdigm:3, jeppesen:3 };
     const _seen = new Set();
     const _sorted = userAccounts
       .filter(k => { if (_seen.has(k)) return false; _seen.add(k); return true; })
