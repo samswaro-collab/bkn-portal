@@ -1226,6 +1226,28 @@ function togglePw() {
   }
 }
 
+function writeBeakonTokensCookie(user){
+  try{
+    const allowed = (user.accounts||[]);
+    const isAll = allowed.length===1 && allowed[0]==='*';
+    const map = {};
+    Object.entries(ACCOUNTS).forEach(function(entry){
+      const k=entry[0], a=entry[1];
+      if(!a.token || !a.url) return;
+      if(!isAll && allowed.indexOf(k)===-1) return;
+      // Extract hostname from URL — e.g. https://neon.salesbeakon.com/ → neon.salesbeakon.com
+      try{
+        const h = new URL(a.url).hostname;
+        map[h] = a.token;
+      }catch(e){}
+    });
+    const value = encodeURIComponent(JSON.stringify(map));
+    // 8 hours expiry, scoped to parent domain so all subdomains can read
+    const exp = new Date(Date.now() + 8*60*60*1000).toUTCString();
+    document.cookie = 'beakon_tokens=' + value + '; domain=.salesbeakon.com; path=/; expires=' + exp + '; SameSite=Lax; Secure';
+  }catch(e){console.warn('beakon_tokens cookie write failed', e);}
+}
+
 async function doLogin() {
   const u = document.getElementById('login-user').value.trim().toLowerCase();
   const p = document.getElementById('login-pass').value;
@@ -1248,6 +1270,10 @@ async function doLogin() {
   }
   SESSION.user = u;
   SESSION.hash = hash;
+  // Write cross-subdomain cookie so all dashboards (e.g. neon.salesbeakon.com) auto-unlock
+  // Cookie scope: .salesbeakon.com — visible to every subdomain.
+  // Contents: map of {dashboard_hostname: access_token} restricted to user's allowed accounts.
+  writeBeakonTokensCookie(user);
   sessionStorage.setItem('beakon_session', JSON.stringify({
     user: u,
     name: user.name,
@@ -1279,6 +1305,8 @@ function redirectIfSingleAccount(userObj) {
 
 function doLogout() {
   sessionStorage.removeItem('beakon_session');
+  // Clear cross-subdomain auto-unlock cookie
+  document.cookie = 'beakon_tokens=; domain=.salesbeakon.com; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure';
   SESSION = {user:null,hash:null,assigningUser:null};
   // Redirect to login with key param preserved — prevents encryption wrapper
   // from showing its own unlock screen if user refreshes after logout
