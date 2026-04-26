@@ -624,7 +624,7 @@ const USERS = {
     role: "clientadmin",
     // SHA-256 of "CyientAdmin2026"
     hash: "c0d9662b471241523fbca237dde710f997acd1786ea51dd14ef6d568ffde6794",
-    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen"],          // sees all cyient accounts via BU hub
+    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen", "acron", "aircanada"],          // sees all cyient accounts via BU hub
     company: "cyient",
     clearanceAccess: false
   },
@@ -770,10 +770,30 @@ const USERS = {
     clearanceAccess: false
   },
   "jeppesen.am": {
-    name: "Jeppesen Account Manager",
+    name: "Jeppesen ForeFlight Account Manager",
     role: "am",
     hash: "c3a4701f79840ed9aa33848d73f7ea2f433d1d2b97f489fab91f1e6ac7f0cd09",
     accounts: ["jeppesen"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "acron.am": {
+    name: "Acron Aviation Account Manager",
+    role: "am",
+    // SHA-256 of "Acron2026"
+    hash: "46e9d4ca6f7ccfd8e176708d3c92a7f36c08d2f9ecba692993d53ff8297fba61",
+    accounts: ["acron"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "aircanada.am": {
+    name: "Air Canada Account Manager",
+    role: "am",
+    // !! REPLACE BEFORE DEPLOY !! — SHA-256 of "Aircanada2026"
+    // Run in PowerShell to generate + auto-replace:
+    //   $h=python -c "import hashlib; print(hashlib.sha256(b'Aircanada2026').hexdigest())"; (Get-Content C:\Users\samsw\Downloads\beakon_hub.html) -replace 'REPLACE_WITH_SHA256_OF_AIRCANADA2026',$h | Set-Content C:\Users\samsw\Downloads\beakon_hub.html
+    hash: "REPLACE_WITH_SHA256_OF_AIRCANADA2026",
+    accounts: ["aircanada"],
     company: "cyient",
     clearanceAccess: false
   }
@@ -955,16 +975,40 @@ const ACCOUNTS = {
     signal: "Aftermarket parts demand surge · Acquisition integration engineering · eVTOL actuators"
   },
   "jeppesen": {
-    name: "Jeppesen (Boeing)",
-    sub: "Navigation Data · Operations Software · Training",
+    name: "Jeppesen ForeFlight",
+    sub: "Navigation Data · Flight Planning · ForeFlight (Thoma Bravo PE)",
     url: "https://jeppesen.salesbeakon.com/",
     token: "jep7n2k5p9j3x1m8w4e6r0q",
     industry: "Aviation Data & Software",
-    location: "Englewood CO · Frankfurt DE · Sydney AU",
+    location: "Englewood CO · Houston TX (ForeFlight) · Frankfurt DE · Sydney AU",
     priority: "medium",
-    updated: "October 2025",
+    updated: "April 2026",
     roles: "35+", revenue: 1.1,
-    signal: "Digital chart modernization · UAM airspace integration · AI flight planning"
+    signal: "Thoma Bravo $10.5B acquisition Sept 2024 · ForeFlight integration · Digital chart modernization · UAM airspace · AI flight planning"
+  },
+  "acron": {
+    name: "Acron Aviation",
+    sub: "Avionics OEM · Training Systems · Flight Data Intelligence (TJC PE)",
+    url: "https://acron.salesbeakon.com/",
+    token: "acr3n5p8k2m1j7x9w4e6r0q",
+    industry: "Commercial Aviation OEM/MRO/Training",
+    location: "Melbourne FL · Grand Rapids MI · Crawley UK · Bangalore India (NEW)",
+    priority: "high",
+    updated: "April 2026",
+    roles: "50-80", revenue: 0.8,
+    signal: "Rebranded from L3Harris CAS Mar 2025 · TJC PE-owned · Bangalore MRO opened Sept 2025 · 18-24mo transformation runway"
+  },
+  "aircanada": {
+    name: "Air Canada",
+    sub: "Mainline Passenger · Express Regional · Cargo · Vacations · Aeroplan Loyalty",
+    url: "https://aircanada.salesbeakon.com/",
+    token: "aca5n7p2k9j3x1m8w4e6r0q",
+    industry: "Commercial Airline (Operator)",
+    location: "Montreal YUL (HQ) · Toronto YYZ · Vancouver YVR",
+    priority: "high",
+    updated: "April 2026",
+    roles: "150-250", revenue: 22.0,
+    signal: "Mark Galardo CEO transition mid-2025 · 18 × 787-10 + 25 × A321XLR ordered 2024 · Aeroplan loyalty modernization · Tech Ops digital MRO opportunity"
   },
   "gea": {
     name: "GE Aerospace",
@@ -1178,7 +1222,7 @@ const COMPANIES = {
     hq: "Hyderabad, India",
     tier: "active",
     // All accounts this company has subscribed to (BEAKON sales intelligence)
-    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen"]
+    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen", "acron", "aircanada"]
   }
   // Future paying clients:
   // "company2": { name:"Company 2", tagline:"...", initial:"2", color:"#...", accent:"#...", hq:"...", tier:"active", accounts:[...] }
