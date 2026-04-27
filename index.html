@@ -490,11 +490,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </div>
       </div>
       <div class="bu-cards">
-        <!-- A&D — ACTIVE -->
+        <!-- A&D — ACTIVE (20 dashboards) -->
         <div class="bu-card bu-card-active" onclick="showCyientAD()">
           <div class="bu-card-name">Aerospace &amp; Defense</div>
-          <div class="bu-card-sub">Bell · Boeing · RTX · Honeywell · GE Aerospace · Bombardier · Embraer · BAE · Parker · DHC · Crane · Gulfstream · Honda Aircraft</div>
-          <div class="bu-card-stat">13 Dashboards Active</div>
+          <div class="bu-card-sub">Boeing · RTX · Honeywell · GE Aerospace · Bombardier · Embraer · BAE · Parker · DHC · Crane · Gulfstream · Honda Aircraft · Textron · Neon · AMETEK · TransDigm · Jeppesen ForeFlight · Acron · Air Canada · Safran</div>
+          <div class="bu-card-stat">20 Dashboards Active</div>
           <div class="bu-card-cta">Open Accounts →</div>
         </div>
         <!-- Automotive — coming soon -->
@@ -503,11 +503,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="bu-card-sub">EV platforms · OEM engineering · Tier-1 suppliers</div>
           <div class="bu-card-soon-badge">Coming Soon</div>
         </div>
-        <!-- Rail — coming soon -->
-        <div class="bu-card bu-card-soon">
+        <!-- Rail — ACTIVE (5 dashboards) -->
+        <div class="bu-card bu-card-active" onclick="showCyientRail()">
           <div class="bu-card-name">Rail</div>
-          <div class="bu-card-sub">Rolling stock · Signalling · Infrastructure engineering</div>
-          <div class="bu-card-soon-badge">Coming Soon</div>
+          <div class="bu-card-sub">Alstom · Hitachi Rail GTS · Hitachi Rail STS · Cubic Transportation · KBR</div>
+          <div class="bu-card-stat">5 Dashboards Active</div>
+          <div class="bu-card-cta">Open Accounts →</div>
         </div>
       </div>
     </div>
@@ -624,7 +625,7 @@ const USERS = {
     role: "clientadmin",
     // SHA-256 of "CyientAdmin2026"
     hash: "c0d9662b471241523fbca237dde710f997acd1786ea51dd14ef6d568ffde6794",
-    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen", "acron", "aircanada"],          // sees all cyient accounts via BU hub
+    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen", "acron", "aircanada", "safran", "alstom", "hitachirail", "hitachists", "cubic", "kbr"],          // sees all cyient accounts via BU hub
     company: "cyient",
     clearanceAccess: false
   },
@@ -789,11 +790,57 @@ const USERS = {
   "aircanada.am": {
     name: "Air Canada Account Manager",
     role: "am",
-    // !! REPLACE BEFORE DEPLOY !! — SHA-256 of "Aircanada2026"
-    // Run in PowerShell to generate + auto-replace:
-    //   $h=python -c "import hashlib; print(hashlib.sha256(b'Aircanada2026').hexdigest())"; (Get-Content C:\Users\samsw\Downloads\beakon_hub.html) -replace 'eeed0abd64ccbdb6b79d1086856ce1ed2e1bfe554cfa1d45e8384279b56573c2',$h | Set-Content C:\Users\samsw\Downloads\beakon_hub.html
+    // SHA-256 of "Aircanada2026"
     hash: "eeed0abd64ccbdb6b79d1086856ce1ed2e1bfe554cfa1d45e8384279b56573c2",
     accounts: ["aircanada"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "alstom.am": {
+    name: "Alstom Account Manager",
+    role: "am",
+    hash: "36a7164ce150aafa4d602b6dac27b4ba27deb623ba4303b91b628ab591808ed4",
+    accounts: ["alstom"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "hitachirail.am": {
+    name: "Hitachi Rail GTS Account Manager",
+    role: "am",
+    hash: "815f153c9e4d44beadc387d4b2c8d62cb43b344b334a3b660986e9dc1690765f",
+    accounts: ["hitachirail"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "hitachists.am": {
+    name: "Hitachi Rail STS Account Manager",
+    role: "am",
+    hash: "1b5ff8196b2d738aee9a28bc9927f90a5cdeada262403ae7e15ac6eff8d224ec",
+    accounts: ["hitachists"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "cubic.am": {
+    name: "Cubic Transportation Account Manager",
+    role: "am",
+    hash: "5517215cf12c905eea23a35e63e91502da8f4de299dc8bae2dfc85e5aa3160f2",
+    accounts: ["cubic"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "kbr.am": {
+    name: "KBR Account Manager",
+    role: "am",
+    hash: "a6fbfc9646a350c74841e28ce62969825059b4b27411c6b62938b5c4ed188657",
+    accounts: ["kbr"],
+    company: "cyient",
+    clearanceAccess: false
+  },
+  "safran.am": {
+    name: "Safran Account Manager",
+    role: "am",
+    hash: "6d1359f1d171754932daf05a75ed03016abb3db1f9b64b8a0ef250e4dab798ed",
+    accounts: ["safran"],
     company: "cyient",
     clearanceAccess: false
   }
@@ -1010,6 +1057,86 @@ const ACCOUNTS = {
     roles: "150-250", revenue: 22.0,
     signal: "Mark Galardo CEO transition mid-2025 · 18 × 787-10 + 25 × A321XLR ordered 2024 · Aeroplan loyalty modernization · Tech Ops digital MRO opportunity"
   },
+  // ─── RAIL CLUSTER ────────────────────────────────────────────────────────
+  "alstom": {
+    name: "Alstom",
+    sub: "Rolling Stock · Signalling · Services (ex-Bombardier Transp. since 2021)",
+    url: "https://alstom.salesbeakon.com/",
+    token: "als4n7p2k9j5x3m1w8e6r0q",
+    industry: "Rail OEM",
+    location: "Saint-Ouen FR (HQ) · Global · TBC after research",
+    priority: "high",
+    updated: "April 2026",
+    roles: "TBC", revenue: 0,
+    signal: "TBC · new chat to populate · post-Bombardier integration + signalling expansion",
+    cluster: "rail"
+  },
+  "hitachirail": {
+    name: "Hitachi Rail GTS",
+    sub: "Ground Transportation Systems · ex-Thales GTS (acquired 2024)",
+    url: "https://hitachirail.salesbeakon.com/",
+    token: "hrg5p9k2n7m3j8x1w4e6r0q",
+    industry: "Rail Signalling + Traffic Mgmt",
+    location: "Italy + Japan (parent) · TBC after research",
+    priority: "high",
+    updated: "April 2026",
+    roles: "TBC", revenue: 0,
+    signal: "TBC · post-acquisition integration window · CBTC/ERTMS",
+    cluster: "rail"
+  },
+  "hitachists": {
+    name: "Hitachi Rail STS",
+    sub: "Signalling · Traffic Solutions · ex-Ansaldo STS",
+    url: "https://hitachists.salesbeakon.com/",
+    token: "hst3n5p8k2m1j7x9w4e6r0q",
+    industry: "Rail Signalling",
+    location: "Genoa IT (HQ) · TBC after research",
+    priority: "high",
+    updated: "April 2026",
+    roles: "TBC", revenue: 0,
+    signal: "TBC · ETCS / ERTMS deployment · India presence",
+    cluster: "rail"
+  },
+  "cubic": {
+    name: "Cubic Transportation",
+    sub: "Fare Collection · Urban Transit Tech · CTS division",
+    url: "https://cubic.salesbeakon.com/",
+    token: "cub5n7p2k9j3x1m8w4e6r0q",
+    industry: "Transit Tech / Fare Systems",
+    location: "San Diego CA (HQ) · Veritas+Elliott PE-owned since 2021",
+    priority: "high",
+    updated: "April 2026",
+    roles: "TBC", revenue: 0,
+    signal: "TBC · post-PE transformation · transit modernization wave",
+    cluster: "rail"
+  },
+  "kbr": {
+    name: "KBR, Inc.",
+    sub: "Engineering Services · Govt + Sustainable Tech · Rail/Infra practice",
+    url: "https://kbr.salesbeakon.com/",
+    token: "kbr7n2k5p9j3x1m8w4e6r0q",
+    industry: "Engineering Services",
+    location: "Houston TX (HQ) · Global",
+    priority: "medium",
+    updated: "April 2026",
+    roles: "TBC", revenue: 0,
+    signal: "TBC · NYSE: KBR · Rail/Infra + Govt Solutions",
+    cluster: "rail"
+  },
+  // ─── AEROSPACE & DEFENSE addition ───────────────────────────────────────
+  "safran": {
+    name: "Safran (North America)",
+    sub: "Aircraft Engines · Helicopter Engines · Landing Sys · Electronics & Defense · Aerosystems · Seats · Nacelles",
+    url: "https://safran.salesbeakon.com/",
+    token: "saf4n7p2k9j5x3m1w8e6r0q",
+    industry: "Aerospace OEM (NA Focus)",
+    location: "EPA: SAF · NA HQ TBC · CFM JV with GE Aerospace",
+    priority: "high",
+    updated: "April 2026",
+    roles: "TBC", revenue: 0,
+    signal: "TBC · LEAP engine ramp via CFM JV · NA expansion · post-Zodiac integration",
+    cluster: "aerospace_defense"
+  },
   "gea": {
     name: "GE Aerospace",
     sub: "Commercial Engines · Defense & Propulsion · JFWTC Bangalore · CFM RISE",
@@ -1222,7 +1349,7 @@ const COMPANIES = {
     hq: "Hyderabad, India",
     tier: "active",
     // All accounts this company has subscribed to (BEAKON sales intelligence)
-    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen", "acron", "aircanada"]
+    accounts: ["textron", "boeing", "rtx", "honeywell", "parker", "dhc", "gea", "bae", "bombardier", "embraer", "crane", "gulfstream", "hondaaircraft", "neon", "ametek", "transdigm", "jeppesen", "acron", "aircanada", "safran", "alstom", "hitachirail", "hitachists", "cubic", "kbr"]
   }
   // Future paying clients:
   // "company2": { name:"Company 2", tagline:"...", initial:"2", color:"#...", accent:"#...", hq:"...", tier:"active", accounts:[...] }
@@ -1617,6 +1744,12 @@ function showCyientHub() {
 
 // A&D card click — show the full Cyient A&D account grid
 function showCyientAD() {
+  showPortal('cyient');
+}
+
+function showCyientRail() {
+  // Currently mirrors A&D - shows all subscribed accounts.
+  // Future: filter by ACCOUNTS[k].cluster === 'rail' to show only Rail tiles.
   showPortal('cyient');
 }
 
