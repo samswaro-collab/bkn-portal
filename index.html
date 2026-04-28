@@ -503,11 +503,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="bu-card-sub">EV platforms · OEM engineering · Tier-1 suppliers</div>
           <div class="bu-card-soon-badge">Coming Soon</div>
         </div>
-        <!-- Rail — ACTIVE (5 dashboards) -->
+        <!-- Rail — ACTIVE (7 dashboards) -->
         <div class="bu-card bu-card-active" onclick="showCyientRail()">
           <div class="bu-card-name">Rail</div>
-          <div class="bu-card-sub">Alstom · Hitachi Rail GTS · Hitachi Rail STS · Cubic Transportation · KBR</div>
-          <div class="bu-card-stat">5 Dashboards Active</div>
+          <div class="bu-card-sub">Alstom · Hitachi Rail GTS · Hitachi Rail STS · Cubic Transportation · KBR · Neology · Modaxo</div>
+          <div class="bu-card-stat">7 Dashboards Active</div>
           <div class="bu-card-cta">Open Accounts →</div>
         </div>
       </div>
@@ -616,7 +616,7 @@ const USERS = {
     role: "admin",
     // SHA-256 of "Beakon2026"
     hash: "87440cbb3d9f1aa374baf55257e59df318272f8c1cb00c1189252411e2ef644d",
-    accounts: ["*"],
+    accounts: ["*", "modaxo"],
     company: "*",            // "*" = can see all companies (BEAKON super-admin)
     clearanceAccess: true    // Grants access to Clearance Landscape section in RTX dashboard
   },
@@ -1137,6 +1137,19 @@ const ACCOUNTS = {
     cluster: "rail",
     buRoles: { "Houston HQ Govt Sol": 1500, "Arlington Federal": 800 },
   },
+  "modaxo": {
+    name: "Modaxo (Constellation Software/Volaris)",
+    sub: "Trapeze · Giro (HASTUS) · INIT · RouteMatch · NextBus · MJM (~30 transit-tech brands)",
+    url: "https://modaxo.salesbeakon.com/",
+    token: "mdx7p2k9j5x3m1w8e6r0qb",
+    industry: "Transit Technology Portfolio",
+    location: "Cedar Knolls NJ · Mississauga ON · Montreal QC · Chesapeake VA",
+    priority: "high",
+    updated: "April 2026",
+    revenue: 0.75,
+    buRoles: { "Trapeze Cedar Knolls NJ": 500, "Trapeze Mississauga ON": 400, "Giro Montreal QC": 275, "INIT Chesapeake VA": 100, "RouteMatch Atlanta GA": 115, "Distributed PS staff": 400 },
+    signal: "Constellation Software margin discipline = cloud modernization + offshore opportunity · cross-portfolio platform consolidation · Trapeze paratransit AI/ML window"
+  },
   "neology": {
     name: "Neology Inc",
     sub: "RFID Tolling · Vehicle ID · Smart Parking · Transit Fare (Smartrac/Apollo)",
@@ -1401,7 +1414,7 @@ const COMPANIES = {
     transdigm:'aerospace_defense', jeppesen:'aerospace_defense', acron:'aerospace_defense',
     aircanada:'aerospace_defense', safran:'aerospace_defense',
     // Rail (5)
-    alstom:'rail', hitachirail:'rail', hitachists:'rail', cubic:'rail', kbr:'rail', neology:'rail'
+    alstom:'rail', hitachirail:'rail', hitachists:'rail', cubic:'rail', kbr:'rail', neology:'rail', modaxo:'rail'
   };
   Object.keys(CLUSTER_MAP).forEach(function(k) {
     if (ACCOUNTS[k]) ACCOUNTS[k].cluster = CLUSTER_MAP[k];
